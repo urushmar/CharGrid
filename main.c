@@ -69,6 +69,16 @@ int main() {
         if( c == 127){
             if(index > 0) index--;
         }
+
+        if(c == '\033'){
+            char esc[2];
+            read(STDIN_FILENO, &esc[0], 1);
+            read(STDIN_FILENO, &esc[1], 1);
+
+            if(esc[0] == '['){
+                //todo: change to 2d array, implement arrow functionality
+            }
+        }
         
         write(STDOUT_FILENO, "\033[2J", 4); // clear screen
         write(STDOUT_FILENO, "\033[H", 3);  // cursor to top left
