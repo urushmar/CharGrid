@@ -55,16 +55,27 @@ void enable_raw_mode() {
 
 int main() {
     enable_raw_mode();
+    char data[1000];
+    int index = 0;
+
     while(1){
         char c = '\0';
         if (read(STDIN_FILENO, &c, 1) == -1) invalid();
-        if ( iscntrl(c)){ // is it control character? unprintable
-            printf("%d\r\n", c);
-        } else {
-            printf("%d (%c)\r\n", c, c);
-        }
 
+        if (!iscntrl(c)){ // is it control character? unprintable
+            data[index] = c;
+            index++;
+        } 
+        if( c == 127){
+            if(index > 0) index--;
+        }
+        
+        write(STDOUT_FILENO, "\033[2J", 4); // clear screen
+        write(STDOUT_FILENO, "\033[H", 3);  // cursor to top left
+
+        write(STDOUT_FILENO, data, index);
         if (c == 'q') break;
+
     }
    
     disable_raw_mode();
